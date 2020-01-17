@@ -1,19 +1,31 @@
-package ch.heg.ig.betRoyale.domain.entity;
+package ch.heg.ig.betRoyale.model;
 
 import ch.heg.ig.betRoyale.handler.EncryptionUtils;
 
 import java.util.Date;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.codec.digest.DigestUtils;
 
 public class Block {
+    public static final String GENESIS_HASH = "1";
+
     public String hash;
+
+    @JsonProperty
     public String previousHash;
-    private String data; //our data will be a simple message.
+    @JsonProperty
+    private List<Transaction> transactions;; //our data will be a simple message.
+    @JsonProperty
     private long timeStamp; //as number of milliseconds since 1/1/1970.
+    @JsonProperty
     private int nonce;
 
     //Block Constructor.
+
     public Block(String data, String previousHash ) {
-        this.data = data;
+        this.transactions = List<Transaction> transactions;
         this.previousHash = previousHash;
         this.timeStamp = new Date().getTime();
         this.hash = calculateHash(); //Making sure we do this after we set the other values.
@@ -25,7 +37,7 @@ public class Block {
                 previousHash +
                         timeStamp +
                         nonce +
-                        data
+                        transactions.toString()
         );
         return calculatedhash;
     }

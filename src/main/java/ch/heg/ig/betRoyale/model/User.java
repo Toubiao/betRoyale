@@ -1,4 +1,4 @@
-package ch.heg.ig.betRoyale.domain.entity;
+package ch.heg.ig.betRoyale.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
