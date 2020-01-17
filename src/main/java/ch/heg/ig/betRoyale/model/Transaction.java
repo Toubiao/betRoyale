@@ -10,4 +10,16 @@ public class Transaction {
     private String recipient;
     @JsonProperty
     private int amount;
+
+    public Transaction() {}
+
+    public Transaction(String sender, String recipient, int amount) {
+        this.sender = sender;
+        this.recipient = recipient;
+        this.amount = amount;
+    }
+
+    public String toString() {
+        return "sender:" + sender + ", recipient:" + recipient + ", amount:" + amount;
+    }
 }

@@ -1,13 +1,13 @@
 package ch.heg.ig.betRoyale.service;
 
 import ch.heg.ig.betRoyale.api.dto.BlockChainDTO;
+import ch.heg.ig.betRoyale.api.dto.BlockChainDTOV1;
 import ch.heg.ig.betRoyale.model.*;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,49 +21,36 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 @Service
 
-public class BlockChainService {
+public class BlockChainServiceV1 {
     /**
      *
      */
     public final static String BLOCKCHAIN_CHANNEL = "blockchain";
 
-    private final static Logger logger = LoggerFactory.getLogger(BlockChainService.class);
+    private final static Logger logger = LoggerFactory.getLogger(BlockChainServiceV1.class);
 
     private final StringRedisTemplate redisTemplate;
     private final ObjectMapper mapper = new ObjectMapper();
 
     private volatile Queue<Transaction> currentTransactions;
-    private volatile BlockChain chain;
+    private volatile BlockChainV1 chain;
 
     @Autowired
-    public BlockChainService(StringRedisTemplate redisTemplate) {
+    public BlockChainServiceV1(StringRedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
-        this.chain = new BlockChain();
-        this.currentTransactions = new ConcurrentLinkedQueue<>();
+        this.chain = new BlockChainV1();
         //create the genesis block
-        createBlock(Block.GENESIS_HASH);
+        createBlock(Block.GENESIS_HASH, Block.GENESIS_Nonce);
     }
 
 
-    private Block createBlock(String previousHash) {
-        int nonce = 0;
-        int nextBlockId = this.chain.length() + 1;
-        long timestamp = System.currentTimeMillis();
-        String nextHash = this.chain.calculateHash(nextBlockId, previousHash, currentTransactions, timestamp, nonce);
-
-        while (!this.chain.isDificultyValid(nextHash)) {
-            nonce = nonce + 1;
-            timestamp = System.currentTimeMillis();
-            nextHash = this.chain.calculateHash(
-                    nextBlockId,
-                    previousHash,
-                    currentTransactions,
-                    timestamp,
-                    nonce
-            );
+    private BlockV1 createBlock(String previousHash, int nonce) {
+        String id = this.chain.id();
+        BlockV1 block = new BlockV1(this.chain.length() + 1,previousHash,currentTransactions,nonce);
+        boolean ok = this.chain.add(block, id);
+        if (! ok) {
+            return null;
         }
-        Block block = new Block(nextBlockId, previousHash, currentTransactions, timestamp, nonce);
-        this.chain.add(block);
         this.currentTransactions = new ConcurrentLinkedQueue<>();
         return block;
     }
@@ -73,12 +60,13 @@ public class BlockChainService {
         return chain.lastBlock().getId() + 1;
     }
 
-
-    public Block mine() {
-        Block newBlock = createBlock(this.chain.calculateHash(this.chain.lastBlock()));
+    public BlockV1 mine() {
+        int nonce = chain.proofOfWork();
+        BlockV1 newBlock = createBlock(chain.lastBlock().hash(), nonce);
         if (newBlock == null) {
             return null;
         }
+
         logger.info("A new block was created!");
         try {
             this.redisTemplate.convertAndSend(BLOCKCHAIN_CHANNEL, mapper.writeValueAsString(chain.getChain()));
@@ -88,13 +76,12 @@ public class BlockChainService {
         return newBlock;
     }
 
-    public BlockChainDTO chain() {
-        return new BlockChainDTO(this.chain);
+    public BlockChainDTOV1 chain() {
+        return new BlockChainDTOV1(this.chain);
     }
 
     public void resolveChain(String message) throws JsonParseException, JsonMappingException, IOException {
-        BlockChain otherChain = new BlockChain(mapper.readValue(message, new TypeReference<List<Block>>() {
-        }));
+        BlockChainV1 otherChain = new BlockChainV1(mapper.readValue(message, new TypeReference<List<BlockV1>>() {}));
 
         if (otherChain.isLongerThan(this.chain) && otherChain.isChainValid()) {
             this.chain = otherChain;

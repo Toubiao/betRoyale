@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
-public class Block {
+public class BlockV1 {
     public static final String GENESIS_HASH = "0";
     public static final int GENESIS_Nonce = 100;
 
@@ -26,10 +26,10 @@ public class Block {
 
     //Block Constructor.
 
-    public Block(int id, String previousHash, Queue<Transaction> transactions,Long timeStamp, int nonce) {
+    public BlockV1(int id, String previousHash, Queue<Transaction> transactions, int nonce) {
         this.id = id;
         this.nonce = nonce;
-        this.timeStamp = timeStamp;
+        this.timeStamp = System.currentTimeMillis();
         if (transactions != null) {
             this.transactions = new ArrayList<>(transactions);
         } else {
@@ -39,7 +39,10 @@ public class Block {
     }
 
     //Calculate new hash based on blocks contents
-
+    public String hash() {
+        return DigestUtils.sha256Hex(id + "|" + timeStamp + "|" + transactions.toString()
+                + "|" + nonce + "|" + previousHash);
+    }
 
     public int getId() {
         return id;
