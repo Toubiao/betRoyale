@@ -6,6 +6,7 @@ import ch.heg.ig.betRoyale.model.Block;
 import ch.heg.ig.betRoyale.model.BlockV1;
 import ch.heg.ig.betRoyale.model.Transaction;
 import ch.heg.ig.betRoyale.service.BlockChainServiceV1;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/v1")
+@RequestMapping("/api/v1")
+@Api(tags = {"BetRoyale API with another version of proof of work"})
 public class BetRoyaleControllerV1 {
     @Autowired
     private BlockChainServiceV1 service;

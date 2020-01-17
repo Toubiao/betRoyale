@@ -50,12 +50,11 @@ public class BlockChain {
     }
 
     public String calculateHash(Block block) {
-        return DigestUtils.sha256Hex(block.getId() + "|" + block.getTimeStamp() + "|" + block.getTransactions().toString()
-                + "|" + block.getNonce() + "|" + block.getPreviousHash());
+        return calculateHash(block.getId(),block.getPreviousHash(), block.getTransactions().toString(),block.getTimeStamp(),block.getNonce());
     }
 
-    public String calculateHash(int id, String previousHash, Queue<Transaction> transactions, long timeStamp, int nonce) {
-        return DigestUtils.sha256Hex(id + "|" + timeStamp + "|" + transactions.toString()
+    public String calculateHash(int id, String previousHash, String transactions, long timeStamp, int nonce) {
+        return DigestUtils.sha256Hex(id + "|" + timeStamp + "|" + transactions
                 + "|" + nonce + "|" + previousHash);
     }
 
@@ -67,10 +66,10 @@ public class BlockChain {
         Block last = iter.next();
         while (iter.hasNext()) {
             Block curr = iter.next();
-            if (! calculateHash(last).equals(curr.getPreviousHash())) {
+            if (!calculateHash(last).equals(curr.getPreviousHash())) {
                 return false;
             }
-            if (! isDificultyValid(calculateHash(curr))) {
+            if (!isDificultyValid(calculateHash(curr))) {
                 return false;
             }
             last = curr;

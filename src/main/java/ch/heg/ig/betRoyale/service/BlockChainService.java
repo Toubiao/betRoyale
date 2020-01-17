@@ -7,7 +7,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +48,7 @@ public class BlockChainService {
         int nonce = 0;
         int nextBlockId = this.chain.length() + 1;
         long timestamp = System.currentTimeMillis();
-        String nextHash = this.chain.calculateHash(nextBlockId, previousHash, currentTransactions, timestamp, nonce);
+        String nextHash = this.chain.calculateHash(nextBlockId, previousHash, currentTransactions.toString(), timestamp, nonce);
 
         while (!this.chain.isDificultyValid(nextHash)) {
             nonce = nonce + 1;
@@ -57,7 +56,7 @@ public class BlockChainService {
             nextHash = this.chain.calculateHash(
                     nextBlockId,
                     previousHash,
-                    currentTransactions,
+                    currentTransactions.toString(),
                     timestamp,
                     nonce
             );

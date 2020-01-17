@@ -1,18 +1,28 @@
 package ch.heg.ig.betRoyale.model;
 
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
+/**
+ *
+ */
 public class Block {
+    /**
+     *
+     */
     public static final String GENESIS_HASH = "0";
+    /**
+     *
+     */
     public static final int GENESIS_Nonce = 100;
 
 
+    /**
+     *
+     */
     @JsonProperty
     private int id;
     @JsonProperty
@@ -24,9 +34,10 @@ public class Block {
     @JsonProperty
     private int nonce;
 
-    //Block Constructor.
+    public Block() {
+    }
 
-    public Block(int id, String previousHash, Queue<Transaction> transactions,Long timeStamp, int nonce) {
+    public Block(int id, String previousHash, Queue<Transaction> transactions, Long timeStamp, int nonce) {
         this.id = id;
         this.nonce = nonce;
         this.timeStamp = timeStamp;
@@ -38,7 +49,6 @@ public class Block {
         this.previousHash = previousHash;
     }
 
-    //Calculate new hash based on blocks contents
 
 
     public int getId() {

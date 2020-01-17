@@ -65,6 +65,7 @@ public class BlockChainV1 {
     public boolean isLongerThan(BlockChainV1 another) {
         return this.length() > another.length();
     }
+
     public boolean isChainValid() {
         if (chain.isEmpty()) {
             return false;

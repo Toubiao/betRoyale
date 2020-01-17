@@ -10,6 +10,7 @@ public class Bet {
     private User player1;
     private User player2;
     private double amount;
+    private BetResult betResult;
 
     public Bet() {
     }
@@ -52,7 +53,15 @@ public class Bet {
         this.amount = amount;
     }
 
-    class BetResult{
+    public BetResult getBetResult() {
+        return betResult;
+    }
+
+    public void setBetResult(BetResult betResult) {
+        this.betResult = betResult;
+    }
+
+    public class BetResult{
         private User winner;
         private final double amountRewards = amount * 2;
 

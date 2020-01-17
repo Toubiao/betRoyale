@@ -5,10 +5,17 @@ import ch.heg.ig.betRoyale.model.Block;
 
 import java.util.List;
 
+/**
+ *
+ */
 public class BlockChainDTO {
     private int length;
     private List<Block> chain;
 
+    /**
+     *
+     * @param chain
+     */
     public BlockChainDTO(BlockChain chain) {
         this.chain = chain.getChain();
         this.length = chain.length();

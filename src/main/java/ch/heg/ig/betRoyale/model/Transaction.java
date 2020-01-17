@@ -9,11 +9,11 @@ public class Transaction {
     @JsonProperty
     private String recipient;
     @JsonProperty
-    private int amount;
+    private double amount;
 
     public Transaction() {}
 
-    public Transaction(String sender, String recipient, int amount) {
+    public Transaction(String sender, String recipient, double amount) {
         this.sender = sender;
         this.recipient = recipient;
         this.amount = amount;
