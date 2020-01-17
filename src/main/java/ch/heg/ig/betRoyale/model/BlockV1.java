@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
+/**
+ *
+ */
 public class BlockV1 {
     public static final String GENESIS_HASH = "0";
     public static final int GENESIS_Nonce = 100;

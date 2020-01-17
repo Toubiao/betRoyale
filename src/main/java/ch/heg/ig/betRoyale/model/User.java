@@ -3,6 +3,10 @@ package ch.heg.ig.betRoyale.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+/**
+ * User class persisted in the db
+ * Represent a player
+ */
 @Document
 public class User {
 

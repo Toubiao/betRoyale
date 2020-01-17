@@ -5,6 +5,9 @@ import ch.heg.ig.betRoyale.model.BlockV1;
 
 import java.util.List;
 
+/**
+ * Same as the other version
+ */
 public class BlockChainDTOV1 {
     private int length;
     private List<BlockV1> chain;

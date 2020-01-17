@@ -2,19 +2,19 @@ package ch.heg.ig.betRoyale.api.dto;
 
 import ch.heg.ig.betRoyale.model.BlockChain;
 import ch.heg.ig.betRoyale.model.Block;
-
 import java.util.List;
 
 /**
- *
+ * Object used by the REST API.
+ * DTO object only for transfer purpose
  */
 public class BlockChainDTO {
     private int length;
     private List<Block> chain;
 
     /**
-     *
-     * @param chain
+     * Constructor
+     * @param chain the entire blockchain
      */
     public BlockChainDTO(BlockChain chain) {
         this.chain = chain.getChain();

@@ -2,6 +2,11 @@ package ch.heg.ig.betRoyale.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ *Object used in a Block
+ * This is the "data" of the block
+ * in our case we store the money transfer
+ */
 public class Transaction {
 
     @JsonProperty

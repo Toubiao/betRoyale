@@ -1,6 +1,5 @@
 package ch.heg.ig.betRoyale;
 
-import ch.heg.ig.betRoyale.model.Bet;
 import ch.heg.ig.betRoyale.model.User;
 import ch.heg.ig.betRoyale.repository.BetRepository;
 import ch.heg.ig.betRoyale.repository.UserRepository;
@@ -12,6 +11,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ */
 @SpringBootApplication
 public class BetRoyaleApplication implements CommandLineRunner {
 
@@ -25,6 +27,11 @@ public class BetRoyaleApplication implements CommandLineRunner {
 	}
 
 
+	/**
+	 * create data for testing purpose
+	 * @param args
+	 * @throws Exception
+	 */
 	@Override
 	public void run(String... args) throws Exception {
 		userRepository.deleteAll();

@@ -5,6 +5,9 @@ import org.apache.commons.codec.digest.DigestUtils;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
+/**
+ *
+ */
 public class BlockChainV1 {
 
     public static final int DIFFICULTY_NUMBER = 5;

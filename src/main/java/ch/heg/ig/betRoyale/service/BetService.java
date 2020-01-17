@@ -13,19 +13,31 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- *
+ * Service class used for manage the bet in the application
  */
 @Service
 public class BetService {
+
     private BlockChainService blockChainService;
     private BetRepository betRepository;
     private UserRepository userRepository;
+
+    /**
+     * This remplace the smart contract
+     * this is a poor alternative
+     */
     private User oracleUser;
-    Timer timer;
+
+    private Timer timer;
+
+    /**
+     * Represent two minutes
+     * for test purpose, normally they will represent 45 minutes it's represent the delay of the brawls star api refresh
+     */
     long delay = 1000L * 60L * 2L;
 
     /**
-     *
+     * Constructor is auto injected by spring boot
      * @param blockChainService
      * @param betRepository
      * @param userRepository
@@ -40,9 +52,9 @@ public class BetService {
     }
 
     /**
-     *
-     * @param bet
-     * @return
+     * This method will handle a bet and transform into transactions and mine a block
+     * @param bet bet between two players
+     * @return the boolean if the block is mined
      */
     public boolean addBet(Bet bet){
         betRepository.save(bet);
@@ -57,8 +69,10 @@ public class BetService {
     }
 
     /**
-     *
-     * @param bet
+     * Normally this method will call the brawls stars api, to get the winner of the bet
+     * but in this case it's only a randomBoolean
+     * this create the transaction and mine the block
+     * @param bet to control
      * @return
      */
     private TimerTask controlBetTask(Bet bet){

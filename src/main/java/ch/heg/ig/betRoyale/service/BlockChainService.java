@@ -1,7 +1,9 @@
 package ch.heg.ig.betRoyale.service;
 
 import ch.heg.ig.betRoyale.api.dto.BlockChainDTO;
-import ch.heg.ig.betRoyale.model.*;
+import ch.heg.ig.betRoyale.model.Block;
+import ch.heg.ig.betRoyale.model.BlockChain;
+import ch.heg.ig.betRoyale.model.Transaction;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -18,11 +20,13 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+/**
+ * Service class for the blochain
+ */
 @Service
-
 public class BlockChainService {
     /**
-     *
+     * Redis channel
      */
     public final static String BLOCKCHAIN_CHANNEL = "blockchain";
 
@@ -34,6 +38,10 @@ public class BlockChainService {
     private volatile Queue<Transaction> currentTransactions;
     private volatile BlockChain chain;
 
+    /**
+     *
+     * @param redisTemplate
+     */
     @Autowired
     public BlockChainService(StringRedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
@@ -44,6 +52,12 @@ public class BlockChainService {
     }
 
 
+    /**
+     * this method will create the block
+     * he hash until the dificulty is respected
+     * @param previousHash
+     * @return
+     */
     private Block createBlock(String previousHash) {
         int nonce = 0;
         int nextBlockId = this.chain.length() + 1;
@@ -67,12 +81,21 @@ public class BlockChainService {
         return block;
     }
 
+    /**
+     * method will add a transaction in a block
+     * @param transaction to add in the current block
+     * @return number of block in the chain
+     */
     public int createTransaction(Transaction transaction) {
         currentTransactions.add(transaction);
         return chain.lastBlock().getId() + 1;
     }
 
 
+    /**
+     * this method will mine a block
+     * @return the new block mined
+     */
     public Block mine() {
         Block newBlock = createBlock(this.chain.calculateHash(this.chain.lastBlock()));
         if (newBlock == null) {
@@ -87,10 +110,22 @@ public class BlockChainService {
         return newBlock;
     }
 
+    /**
+     *
+     * @return
+     */
     public BlockChainDTO chain() {
         return new BlockChainDTO(this.chain);
     }
 
+    /**
+     * This method is called by the Redis MessageListenerAdapter
+     * control if the chain contained in the message is recent and valid
+     * @param message
+     * @throws JsonParseException
+     * @throws JsonMappingException
+     * @throws IOException
+     */
     public void resolveChain(String message) throws JsonParseException, JsonMappingException, IOException {
         BlockChain otherChain = new BlockChain(mapper.readValue(message, new TypeReference<List<Block>>() {
         }));

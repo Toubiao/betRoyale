@@ -1,8 +1,10 @@
 package ch.heg.ig.betRoyale.service;
 
-import ch.heg.ig.betRoyale.api.dto.BlockChainDTO;
 import ch.heg.ig.betRoyale.api.dto.BlockChainDTOV1;
-import ch.heg.ig.betRoyale.model.*;
+import ch.heg.ig.betRoyale.model.Block;
+import ch.heg.ig.betRoyale.model.BlockChainV1;
+import ch.heg.ig.betRoyale.model.BlockV1;
+import ch.heg.ig.betRoyale.model.Transaction;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -19,14 +21,15 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+/**
+ *
+ */
 @Service
-
 public class BlockChainServiceV1 {
     /**
      *
      */
     public final static String BLOCKCHAIN_CHANNEL = "blockchain";
-
     private final static Logger logger = LoggerFactory.getLogger(BlockChainServiceV1.class);
 
     private final StringRedisTemplate redisTemplate;
@@ -40,7 +43,7 @@ public class BlockChainServiceV1 {
         this.redisTemplate = redisTemplate;
         this.chain = new BlockChainV1();
         //create the genesis block
-        createBlock(Block.GENESIS_HASH, Block.GENESIS_Nonce);
+        createBlock(Block.GENESIS_HASH, BlockV1.GENESIS_Nonce);
     }
 
 
